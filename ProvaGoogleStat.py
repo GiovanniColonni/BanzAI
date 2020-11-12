@@ -5,6 +5,7 @@ import csv as cvs
 
 film_list = ["Il trono di spade"]
 time_frame = "2020-10-11 2020-11-11"
+
 ## Dataset layout :
                                     #Regione1 #Regione2
             #<numero trimestre,Anno> 
