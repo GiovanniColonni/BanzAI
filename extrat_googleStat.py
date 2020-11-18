@@ -44,18 +44,23 @@ class ExtractGoogleStat:
         self.start_date = next_date
         self.time_frame = date_t
 
-    def sendReq(self): # send a request on a certain time period
+    def collectByRegion(self): # send a request on a certain time period
 
         pyT = TrendReq(hl="it-IT") # stabilisce connessione
         pyT.build_payload(kw_list=self.film_list,timeframe=self.time_frame,geo=self.geo)
         self.data_frame = pyT.interest_by_region()
-            
+    
+    def collectByCity(self):
+        pyT = TrendReq(hl="it-IT") # stabilisce connessione
+        pyT.build_payload(kw_list=self.film_list,timeframe=self.time_frame,geo=self.geo)
+        self.data_frame = pyT.interest_by_region(resolution = 'CITY',inc_low_vol=True, inc_geo_code=False)
+        print(self.data_frame)    
 
     def collectStat(self):
 
         # ciclare anche su lista film
         while(self.setTimeFrame() != -1):
-            self.sendReq()
+            self.collectByCity()
             self.writeToCVS()
         
         pass
