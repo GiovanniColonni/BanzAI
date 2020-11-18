@@ -50,7 +50,7 @@ class ExtractGoogleStat:
         pyT.build_payload(kw_list=self.film_list,timeframe=self.time_frame,geo=self.geo)
         self.data_frame = pyT.interest_by_region()
     
-    def collectByCity(self):
+    def collectByCity(self): # il wrapper per le api ha un bug https://github.com/GeneralMills/pytrends/issues/417
         pyT = TrendReq(hl="it-IT") # stabilisce connessione
         pyT.build_payload(kw_list=self.film_list,timeframe=self.time_frame,geo=self.geo)
         self.data_frame = pyT.interest_by_region(resolution = 'CITY',inc_low_vol=True, inc_geo_code=False)
