@@ -7,7 +7,7 @@ class ExtractGoogleStat:
     def __init__(self,start_date):
 
         self.start_date = datetime.date.fromisoformat(start_date)
-        self.film_list = ["Il trono di spade"]
+        self.film_list = ["Il trono di spade"] # prendere questa da mongoDB una volta inserita
         self.data_frame = 0
         self.time_frame = ""
         self.done = False

@@ -157,6 +157,9 @@ def getAllSeries2():
             
         Serie_Tv["seasons"] = seasons
         List_SerieTV.append(Serie_Tv)
+        # al posto della riga sopra 
+        # res = TvSeries_collection.insertone(Serie_Tv)
+        
         if(c > 4):
            print(json.dumps(List_SerieTV, indent=4, default=str))
            break
