@@ -1,11 +1,3 @@
-TO DO :
-
-        - API immagini
-        - ultimo test di entrambe le API
-        - Carico dati su mongodb
-        - riprendo i dati da GoogleStatExtractor.py
-        - ricerco nomi
-
 
 
 1. Per creare un DB su mongo dalla shell del server bisogna utilizzare

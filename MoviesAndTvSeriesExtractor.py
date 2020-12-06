@@ -34,14 +34,21 @@ def getAllMovies(): # top rated permette di prendere tutti i film ordinati per i
         # sistemare
     list_to_write = []
     data_pages = []
-    for p in range(378,380): # 400 è il numero di pagine
+    for p in range(1,400): # 400 è il numero di pagine
         url = f"https://api.themoviedb.org/3/movie/top_rated?api_key=0a11e794490331ffaf9f0fdb167a701e&language=it-IT&page={p}"
-        res_body = requests.get(url=url,params = params ) # controllare se status = 200
+        res_body = requests.get(url=url,params = params ) #
+        
+        if(res_body.status_code != 200):
+            print(f"page {p} failed \n")
+            continue
+        
         data_j = res_body.json()
+        
         data_pages.append(data_j["results"])
 
             
-        print(str(p)+"\n")
+        print(f"page {p} done \n")
+
 
     for dp in data_pages:
         for d in dp: # c'è la possibilità di mettere anche il voto che hanno dato sul sito
@@ -53,10 +60,11 @@ def getAllMovies(): # top rated permette di prendere tutti i film ordinati per i
                     "poster_path":d["poster_path"],"backdrop_path":d["backdrop_path"]}
             
             list_to_write.append(row)
+            Movies_collection.insert_one(row)
             
 
-    print(list_to_write)    
-    
+    print("Collecting film done \n")    
+    #print(json.dumps(list_to_write, indent=4, default=str))
     pass 
 
 def getGenres(g_ids): # gli passo la lista genr_ids e ritorna i genere
@@ -93,10 +101,10 @@ def getAllSeries2():
                     # 5 itero sulle season e prendo gli episodi
     List_SerieTV = []
     c = 1 
-    for page in range(1,70): # 1
+    for page in range(1,74): # 1
         url = f"https://api.themoviedb.org/3/tv/top_rated?api_key=0a11e794490331ffaf9f0fdb167a701e&language=it-IT&page={page}"
         res_body = requests.get(url=url,params=params)
-
+        print(f"page {page} \n")
         if res_body.status_code != 200 :
                     print("break page")
                     break 
@@ -109,10 +117,15 @@ def getAllSeries2():
             print("Tvs "+ str(c) +"\n")
            
             genres = getGenres(tvS["genre_ids"])
-            Serie_Tv = {"id_tv_series":tvS["id"],"name_tv_series":tvS["name"],"first_air_date":tvS["first_air_date"],"genres":genres,"popularity":tvS["popularity"]
+            try:
+                Serie_Tv = {"id_tv_series":tvS["id"],"name_tv_series":tvS["name"],"first_air_date":tvS["first_air_date"],"genres":genres,"popularity":tvS["popularity"]
                 ,"origin_country":tvS["origin_country"],
                 "original_language":tvS["original_language"],"poster_path":tvS["poster_path"],"seasons":[]}
-            
+            except:
+                print(f"error in serie {tvS['id']}")
+                print(tvS)
+                continue
+
             # prendo le stagioni
             url = f"https://api.themoviedb.org/3/tv/{tvS['id']}?api_key=0a11e794490331ffaf9f0fdb167a701e&language=it-IT" 
             
@@ -158,12 +171,11 @@ def getAllSeries2():
         Serie_Tv["seasons"] = seasons
         List_SerieTV.append(Serie_Tv)
         # al posto della riga sopra 
-        # res = TvSeries_collection.insertone(Serie_Tv)
+        TvSeries_collection.insert_one(Serie_Tv)
         
-        if(c > 4):
-           print(json.dumps(List_SerieTV, indent=4, default=str))
-           break
-
+        
+    print(json.dumps(List_SerieTV, indent=4, default=str))
+    print(len(List_SerieTV))
        
                 
 
@@ -258,7 +270,7 @@ if __name__ == "__main__":
     print("Start \n")
     now = datetime.now()
     
-    #fillGenres()
+    fillGenres()
     #getAllMovies()
     getAllSeries2()
 
