@@ -1,7 +1,0 @@
-
-
-1. Per creare un DB su mongo dalla shell del server bisogna utilizzare
-
-
-
-        use <nome_db>
