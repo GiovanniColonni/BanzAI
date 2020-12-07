@@ -30,6 +30,7 @@ id_series = []
 seasons = []
 
 # link doc : https://developers.themoviedb.org/3/movies/get-top-rated-movies
+
 def getAllMovies(): # top rated permette di prendere tutti i film ordinati per il parametro rate
         # sistemare
     list_to_write = []
@@ -100,8 +101,9 @@ def getAllSeries2():
                 # 4 prendo tutte le season
                     # 5 itero sulle season e prendo gli episodi
     List_SerieTV = []
-    c = 1 
+    c = 0
     for page in range(1,74): # 1
+        
         url = f"https://api.themoviedb.org/3/tv/top_rated?api_key=0a11e794490331ffaf9f0fdb167a701e&language=it-IT&page={page}"
         res_body = requests.get(url=url,params=params)
         print(f"page {page} \n")
@@ -113,8 +115,8 @@ def getAllSeries2():
         data_page = data_page["results"] # risultato di 1 pagina
        
         for tvS in data_page: # 2
-            c = c + 1
-            print("Tvs "+ str(c) +"\n")
+            c = c+1
+           # print("Tvs "+ str(c) +"\n")
            
             genres = getGenres(tvS["genre_ids"])
             try:
@@ -149,7 +151,7 @@ def getAllSeries2():
 
                 url = f"https://api.themoviedb.org/3/tv/{tvS['id']}/season/{seas['season_number']}?api_key=0a11e794490331ffaf9f0fdb167a701e&language=it-IT"
                 
-                print(f"id : {tvS['id']} season : {seas['season_number']} \n")
+                #print(f"id : {tvS['id']} season : {seas['season_number']} \n")
 
                 res_body = requests.get(url=url,params=params)
                 if res_body.status_code != 200 :
@@ -168,14 +170,15 @@ def getAllSeries2():
                 s["episodes"] = episodes
                 seasons.append(s)
             
-        Serie_Tv["seasons"] = seasons
-        List_SerieTV.append(Serie_Tv)
+            Serie_Tv["seasons"] = seasons
+            List_SerieTV.append(Serie_Tv)
         # al posto della riga sopra 
-        TvSeries_collection.insert_one(Serie_Tv)
+            res = TvSeries_collection.insert_one(Serie_Tv)
         
+            print(f" {c}) name : {Serie_Tv['name_tv_series']} res.ack = {res.acknowledged} \n")
         
-    print(json.dumps(List_SerieTV, indent=4, default=str))
-    print(len(List_SerieTV))
+    # print(json.dumps(List_SerieTV, indent=4, default=str))
+    print(f"tot number rows: {len(List_SerieTV)} = {c} \n")
        
                 
 
@@ -246,8 +249,27 @@ def getAllSeries():
 
 
 
-def getImage():
-   img_url = "https://image.tmdb.org/t/p/w500/zCKmhauiC5RY8uPkM7Ss2TtGrxD.jpg"
+def getMoviesImage():
+
+   # prendo tutti i film, poster path e backdrop path
+
+   for movie in Movies_collection.fin({},{"_id":0,"title":1,"poster_path":1,"backdrop_path":1}) :
+
+       if(movie["poster_path"] != ''):
+           img_url = f"https://image.tmdb.org/t/p/original{movie['poster_path']}"
+           name = f"poster_{movie['title']}.png" 
+           # request immagine
+           pass
+       
+       if(movie["backdrop_path"] != '')
+           img_url = f"https://image.tmdb.org/t/p/original{movie['backdrop_path']}"
+           name = f"backdrop_{movie['title']}.png" 
+           
+           pass
+       
+       print(f"{}")
+
+   img_url = "https://image.tmdb.org/t/p/original/zCKmhauiC5RY8uPkM7Ss2TtGrxD.jpg"
    name_img = "img.jpg" 
    r = requests.get(img_url,stream = True)
   

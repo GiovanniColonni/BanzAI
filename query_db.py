@@ -10,9 +10,13 @@ Movies_collection = DomainData["Movies"]
 TvSeries_collection = DomainData["TvSeries"]
 
 def q1(): # film da 2010 a oggi
+    
     start = datetime(2010,1,1,0,0,0)
     start = start.isoformat()
-    q1_ = {"first_air_data":{"$gte": start}}
+    
+    print(start)
+    
+    q1_ = {"release_date":{"$gte": "2010-01-01"}}
     res = Movies_collection.find(q1_)
     
     for r in res:
