@@ -95,6 +95,7 @@ def fillGenres(): # scarica tutti i generi da mappare con genr_ids di getAllMovi
         
 # link doc : https://developers.themoviedb.org/3/tv/get-top-rated-tv
 def getAllSeries2():
+    # per tenere aggiornate le serie devo guardare 
     # 1 itero sulle pagine
         # 2 itero sui risultati della pagina
             # 3 creo livello tv_serie
@@ -248,42 +249,61 @@ def getAllSeries():
     pass
 
 
+def getSeriesImages():
+
+    c = 0
+    for serie in TvSeries_collection.find({"first_air_data":{"$gte":"2015-01-01"}}):
+        c = c +1
+        #poster path
+        for seasons in serie["seasons"]:
+            #image url
+            for episode in seasons["episodes"]:
+                # image_path
+
+                pass
+    print(f"n serie {c} \n")
 
 def getMoviesImage():
 
    # prendo tutti i film, poster path e backdrop path
-
-   for movie in Movies_collection.fin({},{"_id":0,"title":1,"poster_path":1,"backdrop_path":1}) :
-
+   c = 0
+   for movie in Movies_collection.find({"release_date":{"$gte":"2015-01-01"}},{"_id":0,"title":1,"poster_path":1,"backdrop_path":1,"release_date":1}):
+       c = c + 1
+       
        if(movie["poster_path"] != ''):
-           img_url = f"https://image.tmdb.org/t/p/original{movie['poster_path']}"
-           name = f"poster_{movie['title']}.png" 
-           # request immagine
-           pass
-       
-       if(movie["backdrop_path"] != '')
-           img_url = f"https://image.tmdb.org/t/p/original{movie['backdrop_path']}"
-           name = f"backdrop_{movie['title']}.png" 
            
-           pass
+           movie_name = movie['title']
+           movie_name = movie_name.replace(" ","")
+           movie_name = movie_name.replace("'","")
+           movie_name = movie_name.replace("/","")
+           movie_name = movie_name.replace("-","")
+
+           img_url = f"https://image.tmdb.org/t/p/w500{movie['poster_path']}"
+           name = f"img/M/poster_{movie_name}.png" 
+           r = requests.get(img_url,stream = True)
+           # request immagine
+           if(r.status_code == 200):
+                r.raw.decode_content = True # altrimenti img.size = 0
+                r.raw
+                with open(name,"wb") as f:
+                    shutil.copyfileobj(r.raw,f)
+
        
-       print(f"{}")
-
-   img_url = "https://image.tmdb.org/t/p/original/zCKmhauiC5RY8uPkM7Ss2TtGrxD.jpg"
-   name_img = "img.jpg" 
-   r = requests.get(img_url,stream = True)
-  
-   # per mettere meglio il nome name = img_url.slice('/')[-1] -1 per dire l'ultimo
-   # per Movies le immagini poster_path, backdrop_path
-   # per TVSeries poster path, per le stagioni : poster_path e sugli episodi : image_path, 
-  
-   if(r.status_code == 200):
-       r.raw.decode_content = True # altrimenti img.size = 0
-       r.raw
-       with open(name_img,"wb") as f:
-           shutil.copyfileobj(r.raw,f)
-
-
+       if(movie["backdrop_path"] != ''):
+           img_url = f"https://image.tmdb.org/t/p/original{movie['backdrop_path']}"
+           name = f"img/M/backdrop_{movie_name}.png" 
+           r = requests.get(img_url,stream = True)
+           # request immagine
+           if(r.status_code == 200):
+                r.raw.decode_content = True # altrimenti img.size = 0
+                r.raw
+                with open(name,"wb") as f:
+                    shutil.copyfileobj(r.raw,f)
+           
+       
+       print(f"movie {c}: {movie['title']} done \n")
+    
+   print(f"count = {c} \n")
 
 # Documentazione per prendere immagini : https://developers.themoviedb.org/4/getting-started/images
 
@@ -292,9 +312,9 @@ if __name__ == "__main__":
     print("Start \n")
     now = datetime.now()
     
-    fillGenres()
+    #fillGenres()
     #getAllMovies()
-    getAllSeries2()
+    getMoviesImage()
 
     #getImage()
     time = datetime.now() - now

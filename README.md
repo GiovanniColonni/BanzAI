@@ -10,10 +10,10 @@ PoliTo Challenge, branch dati dominio
 
 **TO DO** :
 
-        - API immagini
-        - ultimo test di entrambe le API
-        - Carico dati su mongodb
+        - API immagini per serie TV
         - riprendo i dati da GoogleStatExtractor.py
-        - ricerco nomi
+        - aggiornare righe mongoDB con in_production per aggiornamento
+        - fare due modili su /server, uno per aggiornare eventuali serie e uno per aggiornare e portare avanti 
+          il controllo dei nomi sulle ricerche (pytrends)
 
 
