@@ -4,13 +4,13 @@
 # per esportazione mongo -> cvs : https://www.quackit.com/mongodb/tutorial/mongodb_export_data.cfm#:~:text=To%20export%20to%20a%20CSV,collection%20to%20a%20CSV%20file.
 
 import requests
-from pandas import DataFrame
+#from pandas import DataFrame
 import pymongo
 from pymongo import MongoClient
 from datetime import datetime
 import shutil
 import json
-
+import os
 
 client = MongoClient('mongodb://localhost:27017/')
 
@@ -252,16 +252,59 @@ def getAllSeries():
 def getSeriesImages():
 
     c = 0
-    for serie in TvSeries_collection.find({"first_air_data":{"$gte":"2015-01-01"}}):
+    #os.chmod("/home/colo",0o777)
+    os.chdir("/home/colo")
+    print(os.getcwd())
+    for serie in TvSeries_collection.find({"first_air_date":{"$gte":"2015-01-01"}}):
         c = c +1
-        #poster path
-        for seasons in serie["seasons"]:
-            #image url
-            for episode in seasons["episodes"]:
-                # image_path
+       
+        serie_name = serie['name_tv_series']
+        serie_name = serie_name.replace(" ","")
+        serie_name = serie_name.replace("'","")
+        serie_name = serie_name.replace("/","")
+        serie_name = serie_name.replace("-","")
+        dir_name = f"/{serie_name}"
 
-                pass
-    print(f"n serie {c} \n")
+        #creo cartella <nome_serie>
+        os.mkdir(dir_name,0o777)
+
+        base_path = dir_name
+
+        
+        if(serie['poster_path'] != ""):
+            img_url = f"https://image.tmdb.org/t/p/w500{serie['poster_path']}" 
+            image_name = f"{base_path}/poster_{serie_name}.png"
+            #getImage(img_url,image_name)
+
+        for season in serie["seasons"]:
+            #image url
+            s_path = f"{base_path}/season_{season['season_number']}"
+            os.mkdir(s_path,0o755)
+            if(season["image_url"] != ""):
+                img_url = f"https://image.tmdb.org/t/p/w500{season['url_image']}" 
+                image_name = f"{s_path}/poster_season_{season['season_number']}.png"
+                #getImage(img_url,image_name)
+
+            for episode in season["episodes"]:
+
+                if(season["image_url"] != ""):
+                    img_url = f"https://image.tmdb.org/t/p/w500{episode['image_path']}" 
+                    image_name = f"{s_path}/poster_episode{episode['episode_number']}.png"
+                    #getImage(img_url,image_name)
+
+                
+        print(f"{c}) {serie['name_tv_series']} done \n")
+        break
+
+def getImage(url,name):
+    r = requests.get(url,stream = True)
+    # request immagine
+    if(r.status_code == 200):
+        r.raw.decode_content = True # altrimenti img.size = 0
+        r.raw
+        with open(name,"wb") as f:
+            shutil.copyfileobj(r.raw,f)
+
 
 def getMoviesImage():
 
@@ -314,8 +357,8 @@ if __name__ == "__main__":
     
     #fillGenres()
     #getAllMovies()
-    getMoviesImage()
-
+    #getMoviesImage()
+    getSeriesImages()
     #getImage()
     time = datetime.now() - now
     print(f"time for execute : {time}")
