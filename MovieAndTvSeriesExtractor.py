@@ -247,58 +247,20 @@ def getAllSeries():
     
     print(episode)
     pass
-def getImage(url,name):
-    r = requests.get(url,stream = True)
-    # request immagine
-    if(r.status_code == 200):
-        r.raw.decode_content = True # altrimenti img.size = 0
-        r.raw
-        with open(name,"wb") as f:
-            shutil.copyfileobj(r.raw,f)
+
 
 def getSeriesImages():
-    
-    os.chdir("S")
+
     c = 0
     for serie in TvSeries_collection.find({"first_air_data":{"$gte":"2015-01-01"}}):
         c = c +1
         #poster path
-        
-        serie_name = serie['name_tv_series']
-        serie_name = serie_name.replace(" ","")
-        serie_name = serie_name.replace("'","")
-        serie_name = serie_name.replace("/","")
-        serie_name = serie_name.replace("-","")
-        
-
-        path = f"/{serie_name}"
-        os.mkdir(path)
-            
-
-        if(serie["poster_path"] != ''):
-        
-            print(f"poster path : {serie['poster_path']} \n")
-            img_url = f"https://image.tmdb.org/t/p/w500{serie['poster_path']}"
-            name = f"{path}/poster_{serie_name}.png"
-            #getImage(img_url,name)
-
         for seasons in serie["seasons"]:
-            
-            if(seasons['url_image'] != ''):
-                print(f"poster path : {seasons['url_image']} \n")
-                img_url = f"https://image.tmdb.org/t/p/w500{seasons['url_image']}"
-                name = f"{path}/season_{seasons['season_number']}.png"
-                #getImage(img_url,name)
-                
+            #image url
             for episode in seasons["episodes"]:
+                # image_path
 
-                if(episode['image_path'] != ''):
-                    print(f"poster path : {episode['image_path']} \n")
-                    img_url = f"https://image.tmdb.org/t/p/w500{episode['image_path']}"
-                    name = f"{path}/episode_{episode['episode_number']}.png"
-                    #getImage(img_url,name)
-                
-            
+                pass
     print(f"n serie {c} \n")
 
 def getMoviesImage():
