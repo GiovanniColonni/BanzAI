@@ -45,7 +45,7 @@ class ExtractGoogleStat:
         self.time_frame = date_t
 
     def collectByRegion(self): # send a request on a certain time period
-
+        
         pyT = TrendReq(hl="it-IT") # stabilisce connessione
         pyT.build_payload(kw_list=self.film_list,timeframe=self.time_frame,geo=self.geo)
         self.data_frame = pyT.interest_by_region()
@@ -60,7 +60,7 @@ class ExtractGoogleStat:
 
         # ciclare anche su lista film
         while(self.setTimeFrame() != -1):
-            self.collectByCity()
+            self.collectByRegion()
             self.writeToCVS()
         
         pass
