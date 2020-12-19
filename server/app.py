@@ -9,5 +9,8 @@ api = Api(app)
 # + pytrend che guarda le views
 # estendere pytrend rispetto ai film gia' visti
 
+
+
+
 if __name__ == "__main__":
     pass
