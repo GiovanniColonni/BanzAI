@@ -11,13 +11,15 @@ function Header(){
 
     
     const Navbar1 = styled(Navbar)`
-    background-color: #8d9db6 !important; 
-    border-color: #F9966E
-    border-width: 2px;
+    background-color: #FFFFFF !important; 
+    border: 4px solid;
+    border-color: #F9966E;
+    border-radius: 6px !important;
+    
     `;
 
     return(
-        <Navbar1 id={"head"} expand="lg">
+        <Navbar1 expand="lg">
             <Container>
             <Row ls={0}><Col></Col><Col><h1>BanzAI</h1></Col><Col></Col></Row>
             <Row><h5>Catch the trend</h5></Row>

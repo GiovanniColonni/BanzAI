@@ -5,7 +5,7 @@ function OutputForm({getRegion,getStyle}){
     return(
         <Container>
 
-            <Row><h1>Out</h1></Row>
+            <Row><h1>qui viene visualizzato l'output</h1></Row>
             <Row>
             <p>Selected : </p>
             <pre>{"\n"+getRegion()}</pre>

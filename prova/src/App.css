@@ -24,7 +24,10 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
+.canvasBack{
+  position : relative;
+  z-index: -3 !important ;
+}
 .App-link {
   color: #61dafb;
 }
